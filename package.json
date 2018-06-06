@@ -1,0 +1,29 @@
+{
+  "name": "imagecomparisionapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rana-xD/imageComparisionAPI.git"
+  },
+  "author": "Rana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rana-xD/imageComparisionAPI/issues"
+  },
+  "homepage": "https://github.com/Rana-xD/imageComparisionAPI#readme",
+  "dependencies": {
+    "aws-sdk": "^2.252.1",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "looks-same": "^3.3.0",
+    "nodemon": "^1.17.5",
+    "randomstring": "^1.1.5",
+    "s3-download": "^1.0.0",
+    "s3fs": "^2.5.0"
+  }
+}
