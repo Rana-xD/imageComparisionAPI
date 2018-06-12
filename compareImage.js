@@ -1,6 +1,12 @@
 var looksSame = require('looks-same');
 var randomstring = require("randomstring");
 var fs = require('fs');
+const utils = require('looks-same/lib/utils');
+
+const readPair = utils.readPair;
+const getDiffPixelsCoords = utils.getDiffPixelsCoords;
+const areColorsSame = require('looks-same/lib/same-colors');
+
 module.exports.compareImage = (desing, markup) => {
     return new Promise((resolve,reject) =>{
         looksSame(desing, markup, {
@@ -24,23 +30,15 @@ module.exports.compareImage = (desing, markup) => {
     
 }
 
-module.exports.createDiffImage = (desing, markup) => {
+module.exports.getDiffPixelsCoords = (desing, markup) => {
     return new Promise((resolve, reject) => {
-        var randomString = randomstring.generate(6);
-        var diffPath = 'diff/' + randomString + '.png';
-        looksSame.createDiff({
-            reference: desing,
-            current: markup,
-            diff: diffPath,
-            highlightColor: '#ff00ff', //color to highlight the differences
-            strict: true
-        }, function (error) {
-            if (error) {
+        readPair(desing, markup, (error, pair) => {
+                if(error)
                 reject(error);
-            } else {
-                resolve(diffPath);
-            }
-        });
+                getDiffPixelsCoords(pair.first, pair.second, areColorsSame, (result) => {
+                   resolve(result);
+                });
+            });
     });
 }
 

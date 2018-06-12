@@ -38,25 +38,17 @@ app.post('/', (req, res) => {
                 })
             }
             else{
-                compareImage.createDiffImage(pathDesignImage,pathMarkupImage).then((diffPath)=>{
-                    aws.uploadImage(diffPath).then((data)=>{
-                        compareImage.deleteFile(pathDesignImage);
-                        compareImage.deleteFile(pathMarkupImage);
-                        console.log(data.Location);
-                        res.send({
-                            code: "success",
-                            message: "different",
-                            path: data.Location
-                        })
-                    }).catch((error)=>{
-                        console.log("ERROR WHEN UPLOAD FILE"+error);
-                        res.send({
-                            code: "fail",
-                            message: error
-                        });    
-                    });
+                compareImage.getDiffPixelsCoords(pathDesignImage,pathMarkupImage).then((coordinate)=>{
+                    compareImage.deleteFile(pathDesignImage);
+                    compareImage.deleteFile(pathMarkupImage);
+                    
+                    res.send({
+                        code: "success",
+                        message: "different",
+                        coordinate: coordinate
+                    })
                 }).catch((error)=>{
-                    console.log("ERROR WHEN CREAT DIFF FILE"+error);
+                    console.log("ERROR WHEN CREAT COORDIDATE"+error);
                     res.send({
                         code: "fail",
                         message: error
