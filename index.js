@@ -41,12 +41,20 @@ app.post('/', (req, res) => {
                 compareImage.getDiffPixelsCoords(pathDesignImage,pathMarkupImage).then((coordinate)=>{
                     compareImage.deleteFile(pathDesignImage);
                     compareImage.deleteFile(pathMarkupImage);
-                    
-                    res.send({
-                        code: "success",
-                        message: "different",
-                        coordinate: coordinate
+                    compareImage.getAveragePixelsCoords(coordinate).then((average)=>{
+                        res.send({
+                            code: "success",
+                            message: "different",
+                            coordinate: average
+                        })
+                    }).catch((error)=>{
+                        console.log("ERROR WHEN CREAT AVERAGE"+error);
+                        res.send({
+                            code: "fail",
+                            message: error
+                        });
                     })
+                    
                 }).catch((error)=>{
                     console.log("ERROR WHEN CREAT COORDIDATE"+error);
                     res.send({
