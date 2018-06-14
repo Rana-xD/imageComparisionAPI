@@ -44,7 +44,7 @@ module.exports.getDiffPixelsCoords = (desing, markup) => {
 module.exports.getAveragePixelsCoords = (coordinate) => {
     return new Promise((resolve,reject) =>{
         var group = [];
-      
+console.log(coordinate.length);  
 while(coordinate.length)
 {
     var smallGroup = [];
@@ -85,6 +85,7 @@ group.forEach((small) =>{
     averageXY = [averageX,averageY];
     average.push(averageXY);
 });
+console.log(average.length);  
 resolve(average);
     });
 }

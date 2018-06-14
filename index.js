@@ -1,6 +1,7 @@
 var app = require('./app');
 var aws = require('./aws')
 var compareImage = require('./compareImage');
+var imageManipulation = require('./imageManipulation');
 const bodyParser = require("body-parser");
 var fs = require('fs');
 
@@ -20,14 +21,17 @@ app.post('/', (req, res) => {
     var designImage = req.body.design;
     var markupImage = req.body.markup;
     var pathDesignImage, pathMarkupImage;
-
+    var width = req.body.width;
+    var height = req.body.height;
 
     var pathDesignImagePromise = aws.downloadImage(designImage);
     pathDesignImagePromise.then((path) => {
+       imageManipulation.imageResize(path,width,height).then((path)=>{
         pathDesignImage = path;
         
         var pathMarkupImagePromise = aws.downloadImage(markupImage);
         pathMarkupImagePromise.then((path) => {
+           imageManipulation.imageResize(path,width,height).then((path)=>{
             pathMarkupImage = path;
             compareImage.compareImage(pathDesignImage,pathMarkupImage).then((data)=>{
                 if(data.code==="same")
@@ -70,15 +74,29 @@ app.post('/', (req, res) => {
                     message: error
                 });
             });
+           }).catch((err)=>{
+            console.log("ERROR WHEN RESIZE MARKUP IMAGE: "+err);
+            res.send({
+                code: "fail",
+                message: error
+            });
+           });
         }).catch((error) => {
-            console.log("ERROR GET PATH MARKUP IMAGE");
+            console.log("ERROR GET PATH MARKUP IMAGE: "+error);
             res.send({
                 code: "fail",
                 message: error
             });
         });
+       }).catch((err)=>{
+            console.log("ERROR WHEN RESZIE DESING IMAGE: "+err);
+            res.send({
+                code: "fail",
+                message: error
+            });
+       });
     }).catch((error) => {
-        console.log("ERROR GET PATH DESIGN IMAGE");
+        console.log("ERROR GET PATH DESIGN IMAGE: "+error);
         res.send({
             code: "fail",
             message: error
