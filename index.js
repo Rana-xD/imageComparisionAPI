@@ -22,17 +22,18 @@ app.post('/', (req, res) => {
     var markupImage = req.body.markup;
     var pathDesignImage, pathMarkupImage;
     var width = req.body.width;
-    var height = req.body.height;
+
 
     var pathDesignImagePromise = aws.downloadImage(designImage);
     pathDesignImagePromise.then((path) => {
-       imageManipulation.imageResize(path,width,height).then((path)=>{
+       imageManipulation.imageResizeDesignImage(path,width).then((path)=>{
         pathDesignImage = path;
-        
+       
         var pathMarkupImagePromise = aws.downloadImage(markupImage);
         pathMarkupImagePromise.then((path) => {
-           imageManipulation.imageResize(path,width,height).then((path)=>{
+           imageManipulation.imageResize(path,width).then((path)=>{
             pathMarkupImage = path;
+            
             compareImage.compareImage(pathDesignImage,pathMarkupImage).then((data)=>{
                 if(data.code==="same")
             {

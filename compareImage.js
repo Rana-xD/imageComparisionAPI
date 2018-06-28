@@ -2,6 +2,7 @@ var looksSame = require('looks-same');
 var randomstring = require("randomstring");
 var fs = require('fs');
 const utils = require('looks-same/lib/utils');
+var Jimp = require("jimp");
 
 const readPair = utils.readPair;
 const getDiffPixelsCoords = utils.getDiffPixelsCoords;
@@ -9,23 +10,29 @@ const areColorsSame = require('looks-same/lib/same-colors');
 
 module.exports.compareImage = (desing, markup) => {
     return new Promise((resolve,reject) =>{
-        looksSame(desing, markup, {
-            strict: true
-        }, function (error, equal) {
-            var data = {
-                code: "same"
+        Jimp.read(desing, function (err, imageA) {
+    if (err) 
+    reject(err)
+    Jimp.read(markup, function (err, imageB) {
+        if (err) reject(err);
+        var diff = Jimp.diff(imageA, imageB); // threshold ranges 0-1 (default: 0.1)
+        if(diff.percent == 0)
+        {
+            data = {
+                code : "same"
             }
-            if(error)
-            {
-                reject(error);
-            }
-            resolve (data);
-        });
-    
-        var data = {
-            code: "different"
+            resolve(data);
         }
-        resolve (data);
+        else
+        {
+            data = {
+                code : "different"
+            }
+            resolve(data);
+        }
+
+    });
+});
     });
     
 }
@@ -69,23 +76,16 @@ while(coordinate.length)
 
     group.push(smallGroup);
 }
-var average = [];
-var sumX = 0;
-var sumY = 0;
-var averageX = 0;
-var averageY = 0;
-var averageXY = [];
+var average = []
 group.forEach((small) =>{
-    small.forEach((mini) =>{
-        sumX += mini[0];
-        sumY += mini[1];
-    });
-    averageX = Math.round(sumX / small.length);
-    averageY = Math.round(sumY / small.length);
-    averageXY = [averageX,averageY];
-    average.push(averageXY);
+    var mini = []
+    miniX = getMiniX(small);
+    miniY = getMiniY(small);
+    mini.push(miniX);
+    mini.push(miniY);
+    average.push(mini);
 });
-console.log(average.length);  
+// console.log(average.length);  
 resolve(average);
     });
 }
@@ -98,4 +98,32 @@ module.exports.deleteFile = (path) =>{
             console.log(err);
         }
     });
+}
+
+function getMiniX(arr)
+{
+    var miniX = arr[0][0];
+    arr.forEach((small)=>{
+        if(small[0] < miniX)
+        {
+            miniX = small[0];
+        }
+       
+    });
+
+    return miniX;
+}
+
+function getMiniY(arr)
+{
+    var miniY = arr[0][1];
+    arr.forEach((small)=>{
+        if(small[1] < miniY)
+        {
+            miniY = small[1];
+        }
+       
+    });
+
+    return miniY;
 }

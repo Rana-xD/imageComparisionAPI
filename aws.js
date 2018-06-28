@@ -1,3 +1,4 @@
+var randomstring = require("randomstring");
 var AWS = require('aws-sdk');
 var fs = require('fs');
 var s3 = new AWS.S3({
@@ -7,7 +8,7 @@ var s3 = new AWS.S3({
 module.exports.downloadImage = (url) => {
     return new Promise((resolve, reject) => {
         var keyfile = url.substring(49);
-        var filename = keyfile.substring(keyfile.indexOf("/")+1);
+        var filename = keyfile.substring(keyfile.indexOf("/") + 1);  
         var path = 'images/' + filename;
         var params = {
             Bucket: "pu-ai-bc", //required
