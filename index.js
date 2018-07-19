@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var app = require('./app');
 var aws = require('./aws')
 var compareImage = require('./compareImage');
@@ -15,6 +16,10 @@ app.use(bodyParser.urlencoded({
  */
 app.use(bodyParser.json());
 
+app.get('/', (req, res, next) => {
+    res.status(200);
+    res.send({status:'OK'});
+});
 
 app.post('/', (req, res) => {
     var designImage = req.body.design;
