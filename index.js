@@ -54,6 +54,12 @@ app.post('/', (req, res) => {
                             message: "different",
                             coordinate: average
                         })
+                    },(error)=>{
+                        console.log("ERROR WHEN CREAT AVERAGE"+error);
+                        res.send({
+                            code: "fail",
+                            message: error
+                        });
                     }).catch((error)=>{
                         console.log("ERROR WHEN CREAT AVERAGE"+error);
                         res.send({
@@ -62,6 +68,12 @@ app.post('/', (req, res) => {
                         });
                     })
                     
+                },(error)=>{
+                    console.log("ERROR WHEN CREAT COORDIDATE"+error);
+                    res.send({
+                        code: "fail",
+                        message: error
+                    });
                 }).catch((error)=>{
                     console.log("ERROR WHEN CREAT COORDIDATE"+error);
                     res.send({
@@ -70,6 +82,12 @@ app.post('/', (req, res) => {
                     });
                 });
             }
+            },(error)=>{
+                console.log("ERROR WHILE COMPARE: "+error);
+                res.send({
+                    code: "fail",
+                    message: error
+                });
             }).catch((error)=>{
                 console.log("ERROR WHILE COMPARE: "+error);
                 res.send({
@@ -77,6 +95,12 @@ app.post('/', (req, res) => {
                     message: error
                 });
             });
+           },(error)=>{
+            console.log("ERROR WHEN RESIZE MARKUP IMAGE: "+err);
+            res.send({
+                code: "fail",
+                message: error
+            }); 
            }).catch((err)=>{
             console.log("ERROR WHEN RESIZE MARKUP IMAGE: "+err);
             res.send({
@@ -84,6 +108,12 @@ app.post('/', (req, res) => {
                 message: error
             });
            });
+    }, (error) => {
+        console.log("ERROR GET PATH DESIGN IMAGE: "+error);
+        res.send({
+            code: "fail",
+            message: error
+        });
     }).catch((error) => {
         console.log("ERROR GET PATH DESIGN IMAGE: "+error);
         res.send({
